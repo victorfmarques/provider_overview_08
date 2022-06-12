@@ -45,20 +45,30 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: const Text("Provider 05"),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Text(
-              '- name: ${context.select<Dog, String>((Dog dog) => dog.name)}',
-              style: const TextStyle(fontSize: 20.0),
-            ),
-            SizedBox(
-              height: 10.0,
-            ),
-            BreedAndAge(),
-          ],
+      body: Consumer<Dog>(
+        builder: (BuildContext context, Dog dog, Widget? child) => Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              child!,
+              SizedBox(
+                height: 10.0,
+              ),
+              Text(
+                '- name: ${dog.name}',
+                style: const TextStyle(fontSize: 20.0),
+              ),
+              SizedBox(
+                height: 10.0,
+              ),
+              BreedAndAge(),
+            ],
+          ),
+        ),
+        child: Text(
+          'I like dogs very much',
+          style: TextStyle(fontSize: 20.0),
         ),
       ),
     );
@@ -72,15 +82,16 @@ class BreedAndAge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text('- breed: ${context.select<Dog, String>((Dog dog) => dog.breed)}',
-            style: TextStyle(fontSize: 20.0)),
-        SizedBox(
-          height: 10.0,
-        ),
-        Age(),
-      ],
+    return Consumer<Dog>(
+      builder: (_, Dog dog, __) => Column(
+        children: [
+          Text('- breed: ${dog.breed}', style: TextStyle(fontSize: 20.0)),
+          SizedBox(
+            height: 10.0,
+          ),
+          Age(),
+        ],
+      ),
     );
   }
 }
@@ -90,20 +101,22 @@ class Age extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text(
-          '- age: ${context.select<Dog, int>((Dog dog) => dog.age)}',
-          style: TextStyle(fontSize: 20.0),
-        ),
-        ElevatedButton(
-          onPressed: () => context.read<Dog>().grow(),
-          child: Text(
-            'Grow',
-            style: TextStyle(fontSize: 20),
+    return Consumer<Dog>(
+      builder: (_, Dog dog, __) => Column(
+        children: [
+          Text(
+            '- age: ${dog.age}',
+            style: TextStyle(fontSize: 20.0),
           ),
-        ),
-      ],
+          ElevatedButton(
+            onPressed: () => dog.grow(),
+            child: Text(
+              'Grow',
+              style: TextStyle(fontSize: 20),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
